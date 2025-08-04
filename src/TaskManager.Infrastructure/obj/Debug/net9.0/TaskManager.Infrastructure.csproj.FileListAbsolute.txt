@@ -35,3 +35,4 @@ C:\Users\ResTIC16\Documents\Projetos\TaskManager\src\TaskManager.Infrastructure\
 C:\Users\ResTIC16\Documents\Projetos\TaskManager\src\TaskManager.Infrastructure\obj\Debug\net9.0\EFCoreNpgsqlNodaTime.cs
 C:\Users\ResTIC16\Documents\Projetos\TaskManager\src\TaskManager.Infrastructure\bin\Debug\net9.0\TaskManager.Infrastructure.runtimeconfig.json
 C:\Users\ResTIC16\Documents\Projetos\TaskManager\src\TaskManager.Infrastructure\obj\Debug\net9.0\TaskManager.Infrastructure.genruntimeconfig.cache
+C:\Users\ResTIC16\Documents\Projetos\TaskManager\src\TaskManager.Infrastructure\obj\Debug\net9.0\TaskManager.Infrastructure.sourcelink.json
