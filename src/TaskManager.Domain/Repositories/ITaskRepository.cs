@@ -7,7 +7,7 @@ public interface ITaskRepository
     Task AddAsync(TaskEntity taskEntity);
     Task<TaskEntity> GetByIdAsync(Guid id);
     
-    Task<IReadOnlyList<TaskEntity>> GetAllAsync();
+    Task<IReadOnlyList<TaskEntity>> GetAllAsync(Guid userId);
     
     Task UpdateAsync(TaskEntity taskEntity);
     

@@ -7,7 +7,8 @@ namespace TaskManager.Infrastructure;
 
 public class TaskManagerDbContext : IdentityDbContext<UserEntity, IdentityRole<Guid>, Guid>
 {
-    public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options) : base(options)
+    public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options)
+        : base(options)
     {
     }
     

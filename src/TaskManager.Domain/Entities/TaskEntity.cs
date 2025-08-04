@@ -10,14 +10,17 @@ public class TaskEntity
     public Status Status {get; set;}
     public DateTime CreatedAt {get; set;}
     public DateTime? CompletedAt {get; set;}
+    public Guid UserId { get; set; }
+    public UserEntity User { get; set; }
 
-    public TaskEntity(string title, string description)
+    public TaskEntity(string title, string description, Guid userId)
     {
         Id = Guid.NewGuid();
         Title = title;
         Description = description;
         Status = Status.Pending;
         CreatedAt = DateTime.UtcNow;
+        UserId = userId;
     }
 
     public TaskEntity()

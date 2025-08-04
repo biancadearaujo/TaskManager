@@ -22,3 +22,4 @@ C:\Users\ResTIC16\Documents\Projetos\TaskManager\src\TaskManager.Domain\obj\Debu
 C:\Users\ResTIC16\Documents\Projetos\TaskManager\src\TaskManager.Domain\obj\Debug\net9.0\ref\TaskManager.Domain.dll
 C:\Users\ResTIC16\Documents\Projetos\TaskManager\src\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.csproj.AssemblyReference.cache
 C:\Users\ResTIC16\Documents\Projetos\TaskManager\src\TaskManager.Domain\obj\Debug\net9.0\EFCoreNpgsqlNodaTime.cs
+C:\Users\ResTIC16\Documents\Projetos\TaskManager\src\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.sourcelink.json

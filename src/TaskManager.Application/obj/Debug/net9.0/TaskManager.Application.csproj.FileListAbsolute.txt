@@ -29,3 +29,4 @@ C:\Users\ResTIC16\Documents\Projetos\TaskManager\src\TaskManager.Application\obj
 C:\Users\ResTIC16\Documents\Projetos\TaskManager\src\TaskManager.Application\obj\Debug\net9.0\TaskManager.Application.pdb
 C:\Users\ResTIC16\Documents\Projetos\TaskManager\src\TaskManager.Application\obj\Debug\net9.0\ref\TaskManager.Application.dll
 C:\Users\ResTIC16\Documents\Projetos\TaskManager\src\TaskManager.Application\obj\Debug\net9.0\EFCoreNpgsqlNodaTime.cs
+C:\Users\ResTIC16\Documents\Projetos\TaskManager\src\TaskManager.Application\obj\Debug\net9.0\TaskManager.Application.sourcelink.json

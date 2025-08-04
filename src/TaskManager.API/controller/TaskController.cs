@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Application.DTOs.TaskManagerDTOs;
 using TaskManager.Application.Exceptions;
@@ -7,6 +9,7 @@ namespace TaskManager.API.controller;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class TaskController : ControllerBase
 {
     private readonly ITaskService _taskService;
@@ -15,25 +18,49 @@ public class TaskController : ControllerBase
     {
         _taskService = taskService;
     }
-
-    [HttpPost]
-    public async Task<IActionResult> CreateTask([FromBody] CreateTaskDto createTaskDto)
+    
+    private Guid GetCurrentUserId()
     {
-        var task = await _taskService.CreateAsync(createTaskDto);
-        return CreatedAtAction(nameof(GetTaskById), new { id = task.Id }, task);
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim))
+        {
+            return Guid.Empty;
+        }
+        return Guid.Parse(userIdClaim);
     }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTask([FromBody] CreateTaskDto createTaskDto)
+        {
+            var userId = GetCurrentUserId();
+            var task = await _taskService.CreateAsync(createTaskDto, userId);
+            return CreatedAtAction(nameof(GetTaskById), new { id = task.Id }, task);
+        }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTaskById(Guid id)
     {
-        var task = await _taskService.GetByIdAsync(id);
-        return Ok(task);
+        try
+        {
+            var userId = GetCurrentUserId();
+            var task = await _taskService.GetByIdAsync(id, userId);
+            return Ok(task);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(new { error = e.Message });
+        }
+        catch (ForbiddenException  e)
+        {
+            return Forbid(e.Message);
+        }
     }
 
     [HttpGet]
     public async Task<IActionResult> GetTasks()
     {
-        var task = await _taskService.GetAllAsync();
+        var userId = GetCurrentUserId();
+        var task = await _taskService.GetAllAsync(userId);
         return Ok(task);
     }
 
@@ -42,12 +69,17 @@ public class TaskController : ControllerBase
     {
         try
         {
-            await _taskService.UpdateAsync(id, updateTaskDto);
+            var userId = GetCurrentUserId();
+            await _taskService.UpdateAsync(id, updateTaskDto, userId);
             return NoContent();
         }
         catch (NotFoundException ex)
         {
             return NotFound(new { error = ex.Message });
+        }
+        catch (ForbiddenException e)
+        {
+            return Forbid(e.Message );
         }
     }
 
@@ -56,12 +88,17 @@ public class TaskController : ControllerBase
     {
         try
         {
-            await _taskService.DeleteAsync(id);
+            var userId = GetCurrentUserId();
+            await _taskService.DeleteAsync(id, userId);
             return NoContent();
         }
         catch (NotFoundException ex)
         {
             return NotFound(new { error = ex.Message });
+        }
+        catch (ForbiddenException e)
+        {
+            return Forbid(e.Message );
         }
     }
 }

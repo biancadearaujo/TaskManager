@@ -22,8 +22,10 @@ public class TaskRepository : ITaskRepository
 
     public async Task<TaskEntity> GetByIdAsync(Guid id)
     {
-        var task = await _context.Tasks.FindAsync(id);
-
+        var task = await _context.Tasks
+            .Include(t => t.User) 
+            .FirstOrDefaultAsync(t => t.Id == id);
+        
         if (task == null)
         {
             throw new NotFoundException($"Task with id {id} not found");
@@ -32,9 +34,11 @@ public class TaskRepository : ITaskRepository
         return task;
     }
 
-    public async Task<IReadOnlyList<TaskEntity>> GetAllAsync()
+    public async Task<IReadOnlyList<TaskEntity>> GetAllAsync(Guid userId)
     {
-        return await _context.Tasks.ToListAsync();
+        return await _context.Tasks
+            .Where(t => t.UserId == userId)
+            .ToListAsync();
     }
 
     public async Task UpdateAsync(TaskEntity taskEntity)
