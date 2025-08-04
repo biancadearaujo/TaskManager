@@ -8,6 +8,9 @@ using TaskManager.Domain.Entities;
 using TaskManager.Domain.Repositories;
 using TaskManager.Infrastructure;
 using TaskManager.Infrastructure.Repositories;
+using System.Data;
+using Npgsql;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,10 +26,10 @@ builder.Services.AddDbContext<TaskManagerDbContext>(options =>
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = "JwtBearer";
-    options.DefaultChallengeScheme = "JwtBearer";
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-.AddJwtBearer("JwtBearer", jwtOptions =>
+.AddJwtBearer(jwtOptions =>
 {
     jwtOptions.TokenValidationParameters = new TokenValidationParameters
     {
@@ -44,6 +47,10 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddScoped<IDbConnection>(sp =>
+    new NpgsqlConnection(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
+
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
@@ -55,21 +62,21 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
-app.UseRouting();
-
-app.UseAuthentication();
-app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

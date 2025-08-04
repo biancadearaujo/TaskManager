@@ -11,8 +11,6 @@ public class TaskManagerDbContext : IdentityDbContext<UserEntity, IdentityRole<G
         : base(options)
     {
     }
-    
-    public DbSet<TaskEntity> Tasks { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

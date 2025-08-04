@@ -2,6 +2,7 @@ using TaskManager.Domain.Repositories;
 using TaskManager.Application.DTOs.TaskManagerDTOs;
 using TaskManager.Application.Exceptions;
 using TaskManager.Domain.Entities;
+using TaskManager.Domain.Enums;
 
 namespace TaskManager.Application.Services;
 
@@ -66,8 +67,18 @@ public class TaskService : ITaskService
             throw new ForbiddenException("You are not authorized to update this task.");
         }
         
-        task.Title = updateTaskDto.Title;
-        task.Description = updateTaskDto.Description;
+        task.Title = updateTaskDto.Title ?? task.Title;
+        task.Description = updateTaskDto.Description ?? task.Description;
+    
+        if (updateTaskDto.Status.HasValue)
+        {
+            task.Status = updateTaskDto.Status.Value;
+    
+            if (task.Status == Status.Completed && task.CompletedAt == null)
+            {
+                task.CompletedAt = DateTime.UtcNow;
+            }
+        }
         
         await _taskRepository.UpdateAsync(task);
     }

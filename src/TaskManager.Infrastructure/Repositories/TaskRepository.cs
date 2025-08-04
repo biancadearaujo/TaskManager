@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
-using TaskManager.Application.Exceptions;
+using System.Data;
+using Dapper;
 using TaskManager.Domain.Entities;
 using TaskManager.Domain.Repositories;
 
@@ -7,49 +7,82 @@ namespace TaskManager.Infrastructure.Repositories;
 
 public class TaskRepository : ITaskRepository
     {
-    private readonly TaskManagerDbContext _context;
+        private readonly IDbConnection _dbConnection;
 
-    public TaskRepository(TaskManagerDbContext context)
-    {
-        _context = context;
-    }
+        public TaskRepository(IDbConnection dbConnection)
+        {
+            _dbConnection = dbConnection;
+        }
 
-    public async Task AddAsync(TaskEntity task)
-    {
-        await _context.Tasks.AddAsync(task);
-        await _context.SaveChangesAsync();
-    }
+        public async Task AddAsync(TaskEntity task)
+        {
+            var sql = @"
+    INSERT INTO ""TaskEntity"" 
+    (""Id"", ""Title"", ""Description"", ""Status"", ""CompletedAt"", ""UserId"", ""CreatedAt"")
+    VALUES 
+    (@Id, @Title, @Description, @Status, @CompletedAt, @UserId, @CreatedAt)";
+    
+            await _dbConnection.ExecuteAsync(sql, new 
+            {
+                task.Id,
+                task.Title,
+                task.Description,
+                Status = task.Status.ToString(),
+                task.CompletedAt,
+                task.UserId,
+                task.CreatedAt
+            });
+        }
 
     public async Task<TaskEntity> GetByIdAsync(Guid id)
     {
-        var task = await _context.Tasks
-            .Include(t => t.User) 
-            .FirstOrDefaultAsync(t => t.Id == id);
+        var sql = @"
+        SELECT * 
+        FROM ""TaskEntity""
+        WHERE ""Id"" = @Id";
         
-        if (task == null)
-        {
-            throw new NotFoundException($"Task with id {id} not found");
-        }
-        
-        return task;
+        var result = await _dbConnection.QuerySingleOrDefaultAsync<TaskEntity>(sql, new { Id = id });
+        return result;
     }
 
     public async Task<IReadOnlyList<TaskEntity>> GetAllAsync(Guid userId)
     {
-        return await _context.Tasks
-            .Where(t => t.UserId == userId)
-            .ToListAsync();
+        var sql = @"
+        SELECT * 
+        FROM ""TaskEntity""
+        WHERE ""UserId"" = @UserId";
+        
+        var result = await _dbConnection.QueryAsync<TaskEntity>(sql, new { UserId = userId });
+        return result.ToList();
     }
 
     public async Task UpdateAsync(TaskEntity taskEntity)
     {
-        _context.Tasks.Update(taskEntity);
-        await _context.SaveChangesAsync();
+        var sql = @"
+    UPDATE ""TaskEntity"" 
+    SET 
+        ""Title"" = @Title, 
+        ""Description"" = @Description, 
+        ""Status"" = @Status,
+        ""CompletedAt"" = @CompletedAt
+    WHERE ""Id"" = @Id";
+    
+        await _dbConnection.ExecuteAsync(sql, new 
+        {
+            taskEntity.Title,
+            taskEntity.Description,
+            Status = taskEntity.Status.ToString(),
+            taskEntity.CompletedAt,
+            taskEntity.Id
+        });
     }
 
     public async Task DeleteAsync(TaskEntity taskEntity)
     {
-        _context.Tasks.Remove(taskEntity);
-        await _context.SaveChangesAsync();
+        var sql = @"
+        DELETE FROM ""TaskEntity"" 
+        WHERE ""Id"" = @Id";
+        
+        await _dbConnection.ExecuteAsync(sql, new { Id = taskEntity.Id });
     }
 }

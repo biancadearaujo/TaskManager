@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TaskManager.Application.DTOs.TaskManagerDTOs;
 using TaskManager.Application.Exceptions;
 using TaskManager.Application.Services;
+using TaskManager.Domain.Enums;
 
 namespace TaskManager.API.controller;
 
