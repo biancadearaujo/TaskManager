@@ -1,16 +1,17 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Domain.Entities;
 
 namespace TaskManager.Infrastructure;
 
-public class TaskManagerDbContext : DbContext
+public class TaskManagerDbContext : IdentityDbContext<UserEntity, IdentityRole<Guid>, Guid>
 {
     public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options) : base(options)
     {
     }
     
     public DbSet<TaskEntity> Tasks { get; set; }
-    public DbSet<UserEntity> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
