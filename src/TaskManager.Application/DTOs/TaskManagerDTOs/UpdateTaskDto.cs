@@ -10,4 +10,13 @@ public class UpdateTaskDto
     
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public Status? Status { get; init; }
+    
+    public UpdateTaskDto(string title, string description, Status? status)
+    {
+        Title = title;
+        Description = description;
+        Status = status;
+    }
+    
+    public UpdateTaskDto() { }
 }
