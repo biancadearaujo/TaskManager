@@ -1,6 +1,7 @@
 namespace TaskManager.Application.DTOs.UserDTOs;
 
-public record UpdateUserDto(
-    string Name,
-    string Email,
-    string Password);
+public class UpdateUserDto
+{
+    public string Email { get; set; }
+    public string Password { get; set; }
+}

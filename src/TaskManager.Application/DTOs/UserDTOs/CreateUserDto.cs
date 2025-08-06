@@ -1,6 +1,8 @@
 namespace TaskManager.Application.DTOs.UserDTOs;
 
-public record CreateUserDto(
-    string Name,
-    string Email,
-    string Password);
+public class CreateUserDto
+{
+    public string Name { get; set; }
+    public string Email { get; set; }
+    public string Password { get; set; }
+}
