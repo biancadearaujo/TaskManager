@@ -9,6 +9,7 @@ using TaskManager.Domain.Repositories;
 using TaskManager.Infrastructure;
 using TaskManager.Infrastructure.Repositories;
 using System.Data;
+using System.Text.Json.Serialization;
 using Npgsql;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -26,7 +27,12 @@ builder.Services.AddCors(options =>
         });
 });
 
-
+// Configura o JSON para Enums como String
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 builder.Services.AddIdentity<UserEntity, IdentityRole<Guid>>(options =>
     {

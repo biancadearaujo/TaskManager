@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "7uDJloKYLbE=",
+  "dgSpecHash": "LiJBI8eC3Zw=",
   "success": true,
-  "projectFilePath": "C:\\Users\\ResTIC16\\Documents\\Projetos\\TaskManager\\src\\TaskManager.Api\\TaskManager.Api.csproj",
+  "projectFilePath": "C:\\Users\\ResTIC16\\Documents\\Projetos\\TaskManager\\src\\TaskManager.API\\TaskManager.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ResTIC16\\.nuget\\packages\\dapper\\2.1.66\\dapper.2.1.66.nupkg.sha512",
     "C:\\Users\\ResTIC16\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

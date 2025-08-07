@@ -1,5 +1,6 @@
 using System.Data;
 using Dapper;
+using TaskManager.Application.Exceptions;
 using TaskManager.Domain.Entities;
 using TaskManager.Domain.Repositories;
 
@@ -27,7 +28,7 @@ public class TaskRepository : ITaskRepository
                 task.Id,
                 task.Title,
                 task.Description,
-                Status = task.Status.ToString(),
+                Status = (int)task.Status,
                 task.CompletedAt,
                 task.UserId,
                 task.CreatedAt
@@ -67,14 +68,19 @@ public class TaskRepository : ITaskRepository
         ""CompletedAt"" = @CompletedAt
     WHERE ""Id"" = @Id";
     
-        await _dbConnection.ExecuteAsync(sql, new 
+        var rowsAffected = await _dbConnection.ExecuteAsync(sql, new 
         {
-            taskEntity.Title,
-            taskEntity.Description,
-            Status = taskEntity.Status.ToString(),
-            taskEntity.CompletedAt,
-            taskEntity.Id
+            Title = taskEntity.Title,
+            Description = taskEntity.Description,
+            Status = (int)taskEntity.Status,
+            CompletedAt = taskEntity.CompletedAt,
+            Id = taskEntity.Id
         });
+
+        if (rowsAffected == 0)
+        {
+            throw new NotFoundException($"Task with id {taskEntity.Id} not found in repository.");
+        }
     }
 
     public async Task DeleteAsync(TaskEntity taskEntity)

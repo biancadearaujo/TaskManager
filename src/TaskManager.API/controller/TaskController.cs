@@ -72,7 +72,8 @@ public class TaskController : ControllerBase
         {
             var userId = GetCurrentUserId();
             await _taskService.UpdateAsync(id, updateTaskDto, userId);
-            return NoContent();
+            var updatedTask = await _taskService.GetByIdAsync(id, userId);
+            return Ok(updatedTask);
         }
         catch (NotFoundException ex)
         {
